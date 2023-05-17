@@ -10,4 +10,13 @@ if (environment.production) {
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
+  .then(() => {
+    if (environment.production) {
+      return;
+    }
+    localStorage.setItem(
+      'authorization_token',
+      `${btoa('zomboy90:TEST_PASSWORD')}`
+    );
+  })
   .catch((err) => console.error(err));
