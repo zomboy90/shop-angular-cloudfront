@@ -19,11 +19,18 @@ export class ErrorPrintInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       tap({
-        error: () => {
+        error: error => {
           const url = new URL(request.url);
 
+          if (error.error instanceof ErrorEvent) {
+            return this.notificationService.showError(
+              `Request to "${url.pathname}" failed. Check the console for the details`,
+              0
+            );
+          }
+
           this.notificationService.showError(
-            `Request to "${url.pathname}" failed. Check the console for the details`,
+            `${error.status}: ${error.error.message}`,
             0
           );
         },
